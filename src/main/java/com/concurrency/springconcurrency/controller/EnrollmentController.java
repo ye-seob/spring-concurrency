@@ -1,7 +1,7 @@
-package com.concurrency.springconcurrency;
+package com.concurrency.springconcurrency.controller;
 
+import com.concurrency.springconcurrency.service.EnrollmentService;
 import lombok.AllArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,8 +24,9 @@ public class EnrollmentController {
     @GetMapping("/count")
     public Map<String, Object> getEnrollmentCount() {
         return Map.of(
-                "capacity", 30,
+                "lectureId", 1,
                 "enrolled", enrollmentService.getEnrolledCount()
         );
     }
+
 }
