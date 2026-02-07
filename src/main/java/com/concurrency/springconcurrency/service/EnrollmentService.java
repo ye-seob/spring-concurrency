@@ -22,13 +22,13 @@ public class EnrollmentService {
         // 동시성 테스트용 지연
         Thread.sleep(50);
 
-        Lecture lecture = lectureRepository.findById(TEST_LECTURE_ID)
+        Lecture lecture = lectureRepository.findByIdForUpdate(TEST_LECTURE_ID)
                 .orElseThrow(() -> new IllegalStateException("강의가 존재하지 않습니다"));
 
         // 동시성 테스트용 지연
         Thread.sleep(50);
 
-        if(lecture.getEnrolled() < lecture.getCapacity() ){
+        if(lecture.getEnrolled() < lecture.getCapacity()){
             lecture.enroll();
         }
     }
