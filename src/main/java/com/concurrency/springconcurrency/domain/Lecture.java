@@ -18,6 +18,9 @@ public class Lecture {
 
     private int enrolled;
 
+    @Version
+    private  Long version;
+
     public void enroll() {
         enrolled++;
     }

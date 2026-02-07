@@ -2,6 +2,9 @@ package com.concurrency.springconcurrency.service;
 
 import com.concurrency.springconcurrency.domain.Lecture;
 import com.concurrency.springconcurrency.repository.LectureRepository;
+import org.springframework.orm.ObjectOptimisticLockingFailureException;
+import org.springframework.retry.annotation.Backoff;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,18 +20,25 @@ public class EnrollmentService {
     }
 
     @Transactional
+    @Retryable(
+            retryFor = ObjectOptimisticLockingFailureException.class,
+            maxAttempts = 3,
+            backoff = @Backoff(delay = 50)
+    )
+
     public void enroll() throws InterruptedException {
+
 
         // 동시성 테스트용 지연
         Thread.sleep(50);
 
-        Lecture lecture = lectureRepository.findByIdForUpdate(TEST_LECTURE_ID)
+        Lecture lecture = lectureRepository.findById(TEST_LECTURE_ID)
                 .orElseThrow(() -> new IllegalStateException("강의가 존재하지 않습니다"));
 
         // 동시성 테스트용 지연
         Thread.sleep(50);
 
-        if(lecture.getEnrolled() < lecture.getCapacity()){
+        if (lecture.getEnrolled() < lecture.getCapacity()) {
             lecture.enroll();
         }
     }
